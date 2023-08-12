@@ -17,12 +17,12 @@ def view_all_users() -> str:
 
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
-def view_one_user(user_id: str = None) -> str:
-    """ GET /api/v1/users/:id
+def delete_user(user_id: str = None) -> str:
+    """ DELETE /api/v1/users/:id
     Path parameter:
       - User ID
     Return:
-      - User object JSON represented
+      - empty JSON is the User has been correctly deleted
       - 404 if the User ID doesn't exist
     """
     if user_id is None:
@@ -30,7 +30,8 @@ def view_one_user(user_id: str = None) -> str:
     user = User.get(user_id)
     if user is None:
         abort(404)
-    return jsonify(user.to_json())
+    user.remove()
+    return jsonify({}), 200
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
